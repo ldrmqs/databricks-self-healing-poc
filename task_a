@@ -1,0 +1,32 @@
+# Databricks notebook source
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col
+
+source_data = [
+    {"order_id": 1, "product": "laptop", "amount": 1200.00, "customer_id": 101, "region": "North"},
+    {"order_id": 2, "product": "mouse", "amount": 25.00, "customer_id": 102, "region": "South"},
+    {"order_id": 3, "product": "keyboard", "amount": 75.00, "customer_id": 103, "region": "East"},
+]
+
+spark = SparkSession.builder.getOrCreate()
+df = spark.createDataFrame(source_data)
+print("Received Schema.")
+df.printSchema()
+print(f"Registered: {df.count()}")
+
+EXPECTED_COLUMNS = ["order_id", "product", "amount", "customer_id", "region"]
+
+print("Validating expected columns...")
+
+processed_df = df.select(
+    col("order_id"),
+    col("product"),
+    col("amount"),
+    col("customer_id"),
+    col("region"),
+    (col("amount") * 1.1).alias("amount_with_tax")
+)
+
+processed_df.show()
+
+print("Pipeline was successfully concluded!")
