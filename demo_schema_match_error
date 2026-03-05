@@ -22,7 +22,7 @@ processed_df = df.select(
     col("product"),
     col("amount"),
     col("customer_id"),
-    lit("Unknown").alias("region"),
+    lit(None).cast("string").alias("region"),
     (col("amount") * 1.1).alias("amount_with_tax")
 )
 
